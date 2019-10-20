@@ -32,10 +32,19 @@ defmodule Reversi.GameServer do
     GenServer.call(reg(name), {:click, name, user, row, col})
   end
   
-  def join(name, user) do 
-    GenServer.call(reg(name), {:join, name, user})
+  def joinP(name, user) do 
+    GenServer.call(reg(name), {:joinP, name, user})
   end
-
+  
+  def send(name, user, txt) do 
+    GenServer.call(reg(name), {:send, name, user, txt})
+  end
+  
+  def handle_call({:send, name, user, txt}, _from, game) do
+    game = Reversi.Game.send(game, user, txt)
+    Reversi.BackupAgent.put(name, game)
+    {:reply, game, game}
+  end
   def handle_call({:click, name, user, row, col}, _from, game) do 
     game = Reversi.Game.click(game, user, row, col)
     Reversi.BackupAgent.put(name, game)
@@ -46,8 +55,8 @@ defmodule Reversi.GameServer do
     {:reply, game, game}
   end
 
-  def handle_call({:join,name, user}, _from, game) do 
-    game = Reversi.Game.join(game, user)
+  def handle_call({:joinP,name, user}, _from, game) do 
+    game = Reversi.Game.joinP(game, user)
     Reversi.BackupAgent.put(name, game)
     {:reply, game, game}
   end

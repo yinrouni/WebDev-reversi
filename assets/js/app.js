@@ -21,7 +21,7 @@ import game_init from "./reversi"
 function start() {
   let root = document.getElementById('root');
   if (root) {
-    let channel = socket.channel("games:" + window.gameName, {user: window.user});
+    let channel = socket.channel("games:" + window.gameName, {});
     // We want to join in the react component.
     game_init(root, channel,window.user);
   }

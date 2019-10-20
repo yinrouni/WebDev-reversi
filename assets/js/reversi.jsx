@@ -17,6 +17,19 @@ function Tile(props){
   var y = (props.column + 0.5)*SIZE +OFFSET;
   return <Circle radius={RADIUS} x={x} y={y} fill = {props.color} stroke = "black" strokeWidth={1} />;
 }
+function tiles(props){
+  var t = []
+  for (var j = 0; j < 8; j++){
+    for (var i = 0; i < 8; i++){
+        var x = (j + 0.5)*SIZE + OFFSET;
+        var y = (i + 0.5)*SIZE +OFFSET;
+	t.push(<Circle radius={RADIUS} x={x} y={y} 
+		fill = {props.tiles[i][j]} stroke = "black" strokeWidth={1} />);
+
+    }
+  }
+  return t;
+}
 
 function Square(props){
   return <Rect x={OFFSET + SIZE * props.row} y={OFFSET + SIZE * props.column} 
@@ -29,8 +42,11 @@ function Chat(props){
 		<div id="text">{props.text}</div>
 		<br />
 		<form>
-  		<input type="datetime-local" name="bdaytime" />
- 		 <input type="submit" value="Send" />
+  		<input type="text" name="chatText" id="input" action="return false;" method="GET"/>
+
+ 		 <input type="button" value="Send" onClick={()=>{
+			 props.onClick(document.getElementById("input").value);
+		 document.getElementById("input").value = '' ;}}/>
 		</form>
 		</div>;
 }
@@ -38,7 +54,7 @@ function Chat(props){
 function StatusButtons(props){
   if (props.gameStatus == "waiting"){
 // Add onclick handler
-    return <button id="join" onClick={()=>props.onClick("join")}> Join the Game </button>;
+    return <button id="join" onClick={()=>props.onClick("joinP")}> Join the Game </button>;
   }
   else {
     return <div>
@@ -51,13 +67,13 @@ function StatusButtons(props){
 class Reversi extends React.Component {
   constructor(props){
     super(props);
-this.channel = props.channel;
-   this.user = props.user; 
+    this.channel = props.channel;
+    this.user = props.user; 
     this.state = {
-	    present: null,
+	    present: [],
 	    timeCount: 0,
 	    turn: null,
-	    text: "display",
+	    text: "",
 	    player1: null, 
 	    player2: null, 
 	    players:[],
@@ -91,10 +107,13 @@ this.channel = props.channel;
   initialize(){
     var board =[];
     var colors = this.state.present;
+    console.log(colors);
+    console.log(this.state.gameStatus);
     for (var j = 0; j < 8; j ++){
       for (var i = 0; i < 8; i++){
       	board.push(<Square row={i} column={j} key={i*8+j} onClick={(i, j)=>this.handleClick(i,j)}/>);
-	/*if (colors[j][i] != null){
+	//board.push(<Tile color={colors[j][i]} row={i} column={j} key={m*8+n+64} />);	
+	      /*if (colors[j][i] != null){
 	  borad.push(<Tile color={colors[j][i]} row={i} column={j} key={i*8+n+64} />);
 	}*/
       }
@@ -133,7 +152,11 @@ this.channel = props.channel;
 	  this.channel.push(mes, {user: this.user})
 	  		.receive("ok", this.got_view.bind(this));
 	  } 
-  
+  sendButton(txt){
+    this.channel.push("send", {user: this.user, txt: txt})
+	  .receive("ok", this.got_view.bind(this));
+    console.log("send " + txt);
+  }
 
   got_view(view) {
     console.log("new view", view);
@@ -147,7 +170,7 @@ this.channel = props.channel;
 	</Layer>
       </Stage>
       <StatusButtons gameStatus={this.state.gameStatus} onClick={(mes)=>this.clickButton(mes)}/>
-      <Chat text={this.state.text} />
+      <Chat text={this.state.text} onClick={(txt)=>this.sendButton(txt)}/>
     </div>;
   }
 }

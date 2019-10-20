@@ -4,7 +4,7 @@ defmodule Reversi.Game do
       present: initTiles(),
       timeCount: 0,
       turn: nil,
-      text: "display",
+      text: "",
       player1: nil, 
       player2: nil, 
       players: [],
@@ -74,7 +74,7 @@ defmodule Reversi.Game do
     end
   end 
   
-  def join(game, user) do
+  def joinP(game, user) do
     game1 = game
     if (game[:player1] == nil) do
       game = Map.put(game, :player1, user)
@@ -88,7 +88,14 @@ defmodule Reversi.Game do
       end
     end
   end  
-   
+ 
+  def send(game, user, txt) do
+    text = game[:text]
+    text = text<> user <>": " <> txt <> "\n"
+    IO.inspect(text)
+    game = Map.put(game, :text, text)
+    game
+  end  
 end
    
         

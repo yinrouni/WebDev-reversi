@@ -20,6 +20,9 @@ form {
   background-color: lightblue;
   color: white;*/
 }
+#text{
+  white-space: pre-wrap;
+}
 
 h2{
   text-align: center;
