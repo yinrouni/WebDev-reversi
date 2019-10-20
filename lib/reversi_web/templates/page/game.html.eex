@@ -1,0 +1,14 @@
+<script>
+ window.gameName = "<%= @name %>";
+  window.user = "<%= @user %>";
+</script>
+
+<div class="row">
+  <div class="column">
+    <h1>Reversi Game: <%= @name %></h1>
+    <h1>User: <%= @user %></h1>
+    <div id="root">
+      <p>React app not loaded...</p>
+    </div>
+  </div>
+</div>

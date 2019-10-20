@@ -1,0 +1,102 @@
+/* This file is for your main application css. */
+/*@import "~milligram/dist/milligram";*/
+
+#text_field{
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10px
+}
+
+#btn_field{
+  border-radius: 20px;
+  background-color: #4CAF50;
+  cursor: pointer;
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+form {
+ /* text-align: center;
+  background-color: lightblue;
+  color: white;*/
+}
+
+h2{
+  text-align: center;
+  font-style: italic;
+  font-size: 40px;
+  color: darkblue;
+}
+
+h1{
+  text-align: center;
+  font-style: normal;
+  font-size: 40px;
+}
+#join{
+  position: absolute;
+  left: 200px;
+  top: 710px;
+}
+
+#undo{
+  position: absolute;
+  left: 170px;
+  top: 710px;
+
+}
+#resignation{
+  position: absolute;
+  left: 270px;
+  top: 710px;
+}
+
+#text{
+  height:300px;
+  width:300px;
+  border:1px solid;
+overflow:auto;
+}
+#chat{
+  width: 350px;
+  position: absolute;
+  left: 600px;
+  top: 220px;
+}
+#main{
+  display: inline-flex;
+}
+
+#list{
+  padding-left: 200px;
+}
+
+#btn{
+border-style: solid;
+border-radius: 20px;
+border-color: green;
+background-color: lightgreen;
+font-size: 30px;
+margin-left: 130px;
+margin-top: 20px;
+}
+
+#game_btn{
+  background-color: green;
+  padding: 4px;
+  height:50px;
+  width:50px;
+}
+
+.board_table{
+  margin-left: 80px;
+}
+
+p{
+  font-size: 25px;
+  font-style: italic;
+}
+
+#winner{
+  margin-left: 100px;
+}

@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="column">
+    <h1>Join a Game</h1>
+    <h2>Reversi</h2>
+    <form action="/game">
+      <input id="text_field" type=text name="name" placeholder="RoomName">
+      </br>
+      <input id="text_field" type=text name="user" placeholder="UserName">
+      </br>
+      <input id="btn_field" type="submit" value="Enter Game">
+    </form>
+  </div>
+</div>
