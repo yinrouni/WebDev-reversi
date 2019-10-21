@@ -19,6 +19,7 @@ defmodule ReversiWeb.GamesChannel do
   def handle_in("click", %{"user"=> user, "row"=> row, "col"=>col}, socket) do
 	name = socket.assigns[:name]
 	game = GameServer.click(name, user, row, col)
+	broadcast socket, "update", game
 	socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
@@ -26,11 +27,13 @@ def handle_in("joinP", %{"user"=>user}, socket) do
 	name = socket.assigns[:name]
 	game = GameServer.joinP(name,user)
 	socket = assign(socket, :game, game)
+	broadcast socket, "update", game	
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 def handle_in("send", %{"user"=>user, "txt"=> txt}, socket) do 
 	name = socket.assigns[:name]
 	game = GameServer.send(name,user, txt)
+	broadcast socket, "update", game
 	socket = assign(socket, :game, game)
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end

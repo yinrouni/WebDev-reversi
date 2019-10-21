@@ -70,7 +70,7 @@ class Reversi extends React.Component {
     this.channel = props.channel;
     this.user = props.user; 
     this.state = {
-	    present: [],
+	    present: this.initTiles(),
 	    timeCount: 0,
 	    turn: null,
 	    text: "",
@@ -113,18 +113,18 @@ class Reversi extends React.Component {
       for (var i = 0; i < 8; i++){
       	board.push(<Square row={i} column={j} key={i*8+j} onClick={(i, j)=>this.handleClick(i,j)}/>);
 	//board.push(<Tile color={colors[j][i]} row={i} column={j} key={m*8+n+64} />);	
-	      /*if (colors[j][i] != null){
-	  borad.push(<Tile color={colors[j][i]} row={i} column={j} key={i*8+n+64} />);
-	}*/
+	      if (colors[j][i] != null){
+	  board.push(<Tile color={colors[j][i]} row={i} column={j} key={i*8+j+64} />);
+	}
       }
     }
     for (var m = 3; m < 5; m ++){
       for (var n = 3; n < 5; n ++){
 	if (m==n){
-      	  board.push(<Tile color="black" row={m} column={n} key={m*8+n+64} />);
+      	  board.push(<Tile color="black" row={m} column={n} key={m*8+n+128+m} />);
         }
 	else{
-	  board.push(<Tile color="white" row={m} column={n} key={m*8+n+64} />);
+	  board.push(<Tile color="white" row={m} column={n} key={m*8+n+128+m} />);
 	}
       }
     }
@@ -144,7 +144,7 @@ class Reversi extends React.Component {
   
   }*/
   handleClick(i, j){
-    this.channel.push("click", {user: this.user, row: i, col: j})
+    this.channel.push("click", {user: this.user, row: j, col: i})
 	.receive("ok", this.got_view.bind(this));
     console.log("click"+i+"/"+j);
   }
