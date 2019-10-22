@@ -80,7 +80,9 @@ class Reversi extends React.Component {
 	    gameStatus:"waiting",
 	    undoStack:[],
     };
-	  this.channel.on("update", this.got_view.bind(this));
+	  this.channel.on("update", (game)=>{this.setState(game);
+	  				console.log("update");
+	  			});
 	  this.channel
 	      .join()
 	      .receive("ok", this.got_view.bind(this))
@@ -117,7 +119,7 @@ class Reversi extends React.Component {
 	  board.push(<Tile color={colors[j][i]} row={i} column={j} key={i*8+j+64} />);
 	}
       }
-    }
+    }/*
     for (var m = 3; m < 5; m ++){
       for (var n = 3; n < 5; n ++){
 	if (m==n){
@@ -127,22 +129,9 @@ class Reversi extends React.Component {
 	  board.push(<Tile color="white" row={m} column={n} key={m*8+n+128+m} />);
 	}
       }
-    }
+    }*/
     return board;
   }
-/*
-  renderTiles(){
-    var tiles = [];
-    for (var j = 0; j < 8; j++){
-      for (var i = 0; i < 8; i++){
-        if (this.state.present[i][j] != null){
-	  tiles.push(<Tile color={colors[i][j]} row={i} column={j} key={j*8+i+64} />)
-	}
-      }
-    }
-    return tiles;
-  
-  }*/
   handleClick(i, j){
     this.channel.push("click", {user: this.user, row: j, col: i})
 	.receive("ok", this.got_view.bind(this));
@@ -161,6 +150,7 @@ class Reversi extends React.Component {
   got_view(view) {
     console.log("new view", view);
     this.setState(view.game);
+    console.log(this.state.text);
   }
   render(){
     return <div id="overall">
