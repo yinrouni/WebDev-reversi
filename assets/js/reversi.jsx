@@ -154,6 +154,7 @@ class Reversi extends React.Component {
       <StatusButtons gameStatus={this.state.gameStatus} onClick={(mes)=>this.clickButton(mes)}/>
       <h4>Black: {this.state.player1}</h4>
       <h4>White: {this.state.player2}</h4>
+      <p id="watch">watches: {this.state.players.length}</p>
       <Chat text={this.state.text} onClick={(txt)=>this.sendButton(txt)}/>
     </div>;
   }

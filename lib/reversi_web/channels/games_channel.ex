@@ -7,6 +7,9 @@ defmodule ReversiWeb.GamesChannel do
  def join("games:" <> name, payload, socket) do
     if authorized?(payload) do
         Reversi.GameServer.start(name)
+	%{"user"=> user}= payload
+	IO.inspect(user <> "join")
+	GameServer.user_join(name, user)
 	game = GameServer.get_state(name)
 			socket = socket
 			|> assign(:name, name)

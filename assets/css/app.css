@@ -94,10 +94,10 @@ margin-top: 20px;
 .board_table{
   margin-left: 80px;
 }
-
-p{
-  font-size: 25px;
-  font-style: italic;
+#watch{
+  position:absolute;
+  left: 800px;
+  top: 180px;
 }
 
 #winner{

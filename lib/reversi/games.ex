@@ -82,14 +82,24 @@ defmodule Reversi.Game do
     Enum.at(present,row) |> Enum.at(col) == nil
   end
   
+  def user_join(game, user) do 
+    newplayers = [user|game.players] 
+    newGame = Map.put(game,:players, newplayers)
+    IO.inspect(newGame)
+    newGame
+  end
+
   def joinP(game, user) do
     game1 = game
+    players = List.delete(game.players, user)
+
     if (game[:player1] == nil) do
-      game = Map.put(game, :player1, user)
+      game = Map.put(game, :player1, user)|> Map.put(:players, players)
       game
     else 
       if (game[:player2] == nil && game[:player1] != user) do 
-        game = Map.put(game,:player2, user)|>Map.put(:gameStatus, "on")
+        game = Map.put(game,:player2, user)|>Map.put(:gameStatus, "on") 
+               |> Map.put(:players, players)
         game
       else
        game
