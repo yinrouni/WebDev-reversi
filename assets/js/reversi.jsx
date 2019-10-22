@@ -124,19 +124,6 @@ class Reversi extends React.Component {
     }
        return board;
   }
-/*
-  renderTiles(){
-    var tiles = [];
-    for (var j = 0; j < 8; j++){
-      for (var i = 0; i < 8; i++){
-        if (this.state.present[i][j] != null){
-	  tiles.push(<Tile color={colors[i][j]} row={i} column={j} key={j*8+i+64} />)
-	}
-      }
-    }
-    return tiles;
-  
-  }*/
   handleClick(i, j){
     this.channel.push("click", {user: this.user, row: j, col: i})
 	.receive("ok", this.got_view.bind(this));
@@ -155,6 +142,7 @@ class Reversi extends React.Component {
   got_view(view) {
     console.log("new view", view);
     this.setState(view.game);
+    console.log(this.state.text);
   }
   render(){
     return <div id="overall">

@@ -11,7 +11,7 @@ defmodule ReversiWeb.GamesChannel do
 			socket = socket
 			|> assign(:name, name)
                         |> assign(:game, game)
-			{:ok, %{"join" => name, "game"=>game}, socket}
+			{:ok, %{"join" => name, "game"=>Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
