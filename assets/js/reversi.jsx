@@ -72,7 +72,7 @@ class Reversi extends React.Component {
     this.state = {
 	    present: this.initTiles(),
 	    timeCount: 0,
-	    turn: null,
+	    turn: "black",
 	    text: "",
 	    player1: null, 
 	    player2: null, 
@@ -80,7 +80,11 @@ class Reversi extends React.Component {
 	    gameStatus:"waiting",
 	    undoStack:[],
     };
-	  this.channel.on("update", this.got_view.bind(this));
+	  
+	  this.channel.on("update", (game) => {
+    this.setState(game);
+    console.log("update");
+    });
 	  this.channel
 	      .join()
 	      .receive("ok", this.got_view.bind(this))
@@ -118,17 +122,7 @@ class Reversi extends React.Component {
 	}
       }
     }
-    for (var m = 3; m < 5; m ++){
-      for (var n = 3; n < 5; n ++){
-	if (m==n){
-      	  board.push(<Tile color="black" row={m} column={n} key={m*8+n+128+m} />);
-        }
-	else{
-	  board.push(<Tile color="white" row={m} column={n} key={m*8+n+128+m} />);
-	}
-      }
-    }
-    return board;
+       return board;
   }
 /*
   renderTiles(){
@@ -170,6 +164,8 @@ class Reversi extends React.Component {
 	</Layer>
       </Stage>
       <StatusButtons gameStatus={this.state.gameStatus} onClick={(mes)=>this.clickButton(mes)}/>
+      <h4>Black: {this.state.player1}</h4>
+      <h4>White: {this.state.player2}</h4>
       <Chat text={this.state.text} onClick={(txt)=>this.sendButton(txt)}/>
     </div>;
   }
