@@ -9,7 +9,7 @@ defmodule Reversi.Game do
       player2: nil, 
       players: [],
       gameStatus: "waiting",
-      undoStack: []
+      undoStack: [], 
     }
   end
   
@@ -43,7 +43,7 @@ defmodule Reversi.Game do
       player2: p2,
       players: ps,
       gameStatus: gs,
-      undoStack: us,  
+      undoStack: us, 
 
 }
 
@@ -82,12 +82,59 @@ defmodule Reversi.Game do
     Enum.at(present,row) |> Enum.at(col) == nil
   end
   
-  def user_join(game, user) do 
-    newplayers = [user|game.players] 
-    newGame = Map.put(game,:players, newplayers)
-    IO.inspect(newGame)
-    newGame
+  def user_join(game, user) do
+    if (!Enum.any?(game.players,fn x-> x== user end))do  
+      newplayers = [user|game.players] 
+      newGame = Map.put(game,:players, newplayers) |> Map.put(:text, game.text<>"[" <>user<>" joined the game]\n")
+      IO.inspect(newGame)
+      newGame
+    else 
+      game
+    end
   end
+  def user_exit(game, user) do 
+    if (Enum.any?(game.players, fn x-> x == user end)) do 
+	newplayers = List.delete(game.players, user)
+        newGame = Map.put(game, :players, newplayers) |> Map.put(:text, game.text<>"[" <>user<>" left the game]\n")
+        newGame
+    else
+        game =  Map.put(game, :text, game.text<>"["<>user<>" left the game]\n")
+	if (user == game.player1) do 
+   	  game = Map.put(game, :gameStatus, "over") |> Map.put(:text, game.text<>"\n["<>game.player2<>" wins!!!]\n")
+		|>Map.put(:player1, nil)|> Map.put(:players, [game.player2|game.players])
+		|> Map.put(:player2, nil)
+	 # IO.inspect(game)
+        else 
+	  game = Map.put(game, :gameStatus, "over")|> Map.put(:text, game.text<>"\n["<>game.player1<>" wins!!!]\n")
+		|>Map.put(:player2, nil)|> Map.put(:players, [game.player1|game.players])
+		|> Map.put(:player1, nil)
+	  
+  	end
+   end
+
+  end
+
+  def resignation(game, loser) do
+	players = [game.player1|game.players]
+        nplayers = [game.player2|players]
+    if (loser == game.player1) do
+	game=Map.put(game, :gameStatus, "over") 
+	|> Map.put(:text, game.text<>"\n["<>game.player2<>" wins!!!]\n")
+	|> Map.put(:players, nplayers)
+	|> Map.put(:player1, nil)|> Map.put(:player2, nil)
+    else
+      	game =  Map.put(game, :gameStatus, "over")
+ 	|> Map.put(:text, game.text<>"\n["<>game.player1<>" wins!!!]\n")
+    	|> Map.put(:players, nplayers)
+	|> Map.put(:player1, nil) |> Map.put(:player2, nil)
+	IO.inspect(game)
+    end
+  end
+  def reset(game, user) do 
+    game |> Map.put(:present, initTiles()) |> Map.put(:gameStatus, "waiting")
+
+  end
+  
 
   def joinP(game, user) do
     game1 = game

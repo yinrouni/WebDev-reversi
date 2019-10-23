@@ -69,11 +69,14 @@ function StatusButtons(props){
 // Add onclick handler
     return <button id="join" onClick={()=>props.onClick("joinP")}> Join the Game </button>;
   }
-  else {
+  else if (props.gameStatus == "on"){
     return <div>
-		  <button id='resignation'>Resignation</button>
+		  <button id='resignation' onClick={()=>props.onClick("resignation")}>Resignation</button>
 	  	<button id='undo'>Undo</button>
 	</div>;
+  }
+  else {
+  	return <button id="join" onClick={()=>props.onClick("reset")}>New Game</button>
   }
 }
 
@@ -103,7 +106,8 @@ class Reversi extends React.Component {
 	      .receive("ok", this.got_view.bind(this))
 	      .receive("error", resp => {console.log("Unable to join", resp);});
   }
-  
+ 
+
   initTiles(){
     var ret = [];
     for (var i = 0; i < 8; i++){
@@ -151,6 +155,11 @@ class Reversi extends React.Component {
 	  .receive("ok", this.got_view.bind(this));
     console.log("send " + txt);
   }
+  handleExit(){
+    this.channel.push("exit", {user: this.user})
+	  .receive("ok", this.got_view.bind(this));
+    console.log(this.user + " exit");
+  }
 
   got_view(view) {
     console.log("new view", view);
@@ -174,6 +183,7 @@ class Reversi extends React.Component {
       <p id="player1">{this.state.player1}</p>
       <p id="player2">{this.state.player2}</p>
       <p id="watch">watches: {this.state.players.length}</p>
+      <button id="exit" onClick={()=> this.handleExit()}>Exit</button>
       <Chat text={this.state.text} onClick={(txt)=>this.sendButton(txt)}/>
     </div>;
   }
