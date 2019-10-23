@@ -8,7 +8,7 @@ export default function game_init(root, channel, user) {
 }
 
 
-let OFFSET=40;
+let OFFSET=60;
 let RADIUS=26;
 let SIZE=60;
 
@@ -37,6 +37,19 @@ function Square(props){
 	onClick={()=>props.onClick(props.row, props.column)} />; 
 }
 
+function Turn(props){
+  var turn = props.turn
+  if (turn == "black"){
+    return [<Circle radius={RADIUS/3} x={0.5 * SIZE + OFFSET} y={-0.7*SIZE+OFFSET} fill="black" stroke= "red" strokeWidth={2} key="k1"/>,
+		  <Circle radius={RADIUS/3} x={0.5 * SIZE + OFFSET} y={-0.25 * SIZE + OFFSET} fill="white" stroke="black" strokeWidth={1} key="k2" />];
+  }
+  else if (turn == "white"){
+    return [<Circle radius={RADIUS/3} x={0.5 * SIZE + OFFSET} y={-0.7*SIZE+OFFSET} fill="black" stroke="black" strokeWidth={1} key="k3"/>,
+	  <Circle radius={RADIUS/3} x={0.5*SIZE+OFFSET} y={-0.25 *SIZE+OFFSET} 
+	    fill="white" stroke="red" strokeWidth={2} key="k4"/>]
+  }
+}
+
 function Chat(props){
   return <div id ="chat">
 		<div id="text">{props.text}</div>
@@ -58,7 +71,7 @@ function StatusButtons(props){
   }
   else {
     return <div>
-		  <button id='resignation'>Resingnation</button>
+		  <button id='resignation'>Resignation</button>
 	  	<button id='undo'>Undo</button>
 	</div>;
   }
@@ -90,7 +103,7 @@ class Reversi extends React.Component {
 	      .receive("ok", this.got_view.bind(this))
 	      .receive("error", resp => {console.log("Unable to join", resp);});
   }
-
+  
   initTiles(){
     var ret = [];
     for (var i = 0; i < 8; i++){
@@ -144,16 +157,22 @@ class Reversi extends React.Component {
     this.setState(view.game);
     console.log(this.state.text);
   }
+ 
+  showTurn() {
+    return <Turn turn={this.state.turn} />
+  
+  }
   render(){
     return <div id="overall">
       <Stage width={600} height={600}>	
         <Layer>
+	  {this.showTurn()}
           {this.initialize()}
 	</Layer>
       </Stage>
       <StatusButtons gameStatus={this.state.gameStatus} onClick={(mes)=>this.clickButton(mes)}/>
-      <h4>Black: {this.state.player1}</h4>
-      <h4>White: {this.state.player2}</h4>
+      <p id="player1">{this.state.player1}</p>
+      <p id="player2">{this.state.player2}</p>
       <p id="watch">watches: {this.state.players.length}</p>
       <Chat text={this.state.text} onClick={(txt)=>this.sendButton(txt)}/>
     </div>;

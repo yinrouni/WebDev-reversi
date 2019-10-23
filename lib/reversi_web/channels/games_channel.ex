@@ -14,10 +14,15 @@ defmodule ReversiWeb.GamesChannel do
 			socket = socket
 			|> assign(:name, name)
                         |> assign(:game, game)
+	send(self, {:brcast_join, game})	
 			{:ok, %{"join" => name, "game"=>Game.client_view(game)}, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+    def handle_info({:brcast_join, game}, socket) do
+    broadcast socket, "update", game
+    {:noreply, socket}
   end
   def handle_in("click", %{"user"=> user, "row"=> row, "col"=>col}, socket) do
 	name = socket.assigns[:name]

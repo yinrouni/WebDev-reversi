@@ -39,19 +39,19 @@ h1{
 #join{
   position: absolute;
   left: 200px;
-  top: 710px;
+  top: 730px;
 }
 
 #undo{
   position: absolute;
   left: 170px;
-  top: 710px;
+  top: 730px;
 
 }
 #resignation{
   position: absolute;
   left: 270px;
-  top: 710px;
+  top: 730px;
 }
 
 #text{
@@ -64,7 +64,7 @@ overflow:auto;
   width: 350px;
   position: absolute;
   left: 600px;
-  top: 220px;
+  top: 240px;
 }
 #main{
   display: inline-flex;
@@ -97,7 +97,18 @@ margin-top: 20px;
 #watch{
   position:absolute;
   left: 800px;
-  top: 180px;
+  top: 200px;
+}
+#player1{
+  position: absolute;
+  left: 130px;
+  top: 170px;
+}
+
+#player2{
+  position: absolute;
+  left: 130px;
+  top: 195px;
 }
 
 #winner{
