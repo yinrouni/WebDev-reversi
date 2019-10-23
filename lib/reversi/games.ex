@@ -9,7 +9,10 @@ defmodule Reversi.Game do
       player2: nil, 
       players: [],
       gameStatus: "waiting",
-      undoStack: [], 
+      undoStack1: [initTiles()],
+      undoStack2: [initTiles()],
+      undo1: 1, 
+      undo2: 1, 
     }
   end
   
@@ -33,7 +36,10 @@ defmodule Reversi.Game do
      p1 = game[:player1]
      p2 = game[:player2]
      gs = game[:gameStatus]
-     us = game[:undoStack]
+     us1 = game[:undoStack1]
+     us2 = game[:undoStack2]
+     ud1 = game[:undo1]
+     ud2 = game[:undo2]
 %{
       present: pre,
       timeCount: tc,
@@ -43,7 +49,10 @@ defmodule Reversi.Game do
       player2: p2,
       players: ps,
       gameStatus: gs,
-      undoStack: us, 
+      undoStack1: us1,
+      undoStack2: us2, 
+      undo1: ud1,
+      undo2: ud2
 
 }
 
@@ -58,9 +67,14 @@ defmodule Reversi.Game do
       newRow = Enum.at(npresent, row) |> List.replace_at(col, "black")
       newTurn = "white"
       npresent = List.replace_at(npresent, row, newRow)
+#      nstack1 = game.undoStack1
+#      if(length(game.undoStack1)!=0) do
+      	nstack1 = [npresent|[hd(game.undoStack1)]]
+      
+#	IO.inspect(nstack1)end 
+#IO.inspect(nstack1)
       game = game |> Map.put(:present, npresent)
-	   |> Map.put(:turn, newTurn)
-      IO.inspect(game)
+	   |> Map.put(:turn, newTurn) |> Map.put(:undoStack1, nstack1)
       game
     else
       if (user == game[:player2] && checkEmpty(present,row,col) && validMove(game,row,col,"white") && game.turn == "white") do
@@ -69,8 +83,13 @@ defmodule Reversi.Game do
         newRow = Enum.at(npresent, row) |> List.replace_at(col, "white")
         newTurn = "black"
         npresent = List.replace_at(npresent, row, newRow)
+  #	nstack2 =game.undoStack2
+#	if (length(game.undoStack2)!= 0) do
+	   nstack2 = [npresent|[hd(game.undoStack2)]]
+   #     end
+IO.inspect(nstack2)
         game = Map.put(game, :present, npresent)
-	     |> Map.put(:turn, newTurn)
+	     |> Map.put(:turn, newTurn)|>Map.put(:undoStack2, nstack2)
         game
       else 
         game
@@ -86,7 +105,6 @@ defmodule Reversi.Game do
     if (!Enum.any?(game.players,fn x-> x== user end))do  
       newplayers = [user|game.players] 
       newGame = Map.put(game,:players, newplayers) |> Map.put(:text, game.text<>"[" <>user<>" joined the game]\n")
-      IO.inspect(newGame)
       newGame
     else 
       game
@@ -129,13 +147,65 @@ defmodule Reversi.Game do
 	|> Map.put(:player1, nil) |> Map.put(:player2, nil)
 	IO.inspect(game)
     end
-  end
+  end	
   def reset(game, user) do 
     game |> Map.put(:present, initTiles()) |> Map.put(:gameStatus, "waiting")
-
+		
   end
-  
+  def undo(game, user) do
+    undoStack1 = game.undoStack1
+    undoStack2 = game.undoStack2
+    npresent = game.present
+    nstack1 = undoStack1
+    nstack2= undoStack2
+    nturn = game.turn 
+    undo1=1
+    undo2=1
+     
+    cond do 
+      user == game.player1 && game.turn == "black" && game.undo1 ==1 ->
+	  if (length(game.undoStack2) > 1) do 
+	    npresent = Enum.at(undoStack2, 1)
+            nstack2 = [npresent]
+	    nstack1 = tl(undoStack1)
+            game = Map.put(game, :present, npresent) |> Map.put(:undoStack1, nstack1)
+			|> Map.put(:undoStack2, nstack2) |> Map.put(:undo1, 0)
+	  end 
+      user == game.player1 && game.turn == "white" && game.undo1 ==1 ->
+          IO.inspect("case2")
+	  npresent = Enum.at(undoStack2,0)
+          IO.inspect(Enum.at(undoStack2, 1))
+          nturn = "black"
+          nstack2 = [npresent]
+	  undo1 = 0
+	  game = Map.put(game, :present, npresent) |> Map.put(:turn, nturn) 
+		|> Map.put(:undoStack2, [npresent]) |> Map.put(:undo1, 0)
+      user == game.player2 && game.turn == "white" && game.undo2 == 1 ->
+          if (length(undoStack1) >1) do 
+	     npresent = Enum.at(undoStack1, 1)
+	     nstack1=[npresent]
+	     nstack2 = tl(undoStack2)
+ 	     game = Map.put(game, :present, npresent) |> Map.put(:undoStack1, nstack1)
+		|> Map.put(:undoStack2, nstack2) |> Map.put(:undo2, 0)
+          end 
 
+       user == game.player2 && game.turn == "black" && game.undo2 == 1->
+	  npresent= Enum.at(undoStack1,0)
+          nturn = "white"
+          nstack1 = [npresent]
+          undo2 = 0
+   IO.inspect(undoStack1)
+      	  game = Map.put(game, :present, npresent) |> Map.put(:turn, nturn)
+		|> Map.put(:undoStack1, [npresent]) |> Map.put(:undo2, 0)
+
+   true ->
+      IO.inspect("no undo")
+	game
+end
+   #IO.inspect(game)
+   #IO.inspect("end of undo")
+   #game 
+  end
   def joinP(game, user) do
     game1 = game
     players = List.delete(game.players, user)

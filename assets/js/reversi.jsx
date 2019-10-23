@@ -72,7 +72,7 @@ function StatusButtons(props){
   else if (props.gameStatus == "on"){
     return <div>
 		  <button id='resignation' onClick={()=>props.onClick("resignation")}>Resignation</button>
-	  	<button id='undo'>Undo</button>
+	  	<button id='undo' onClick={()=>props.onClick("undo")}>Undo</button>
 	</div>;
   }
   else {

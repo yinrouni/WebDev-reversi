@@ -46,6 +46,14 @@ def handle_in("reset", %{"user"=>user}, socket) do
     {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
   end
 
+def handle_in("undo", %{"user"=>user}, socket) do 
+	name = socket.assigns[:name]
+	game = GameServer.undo(name,user)
+	socket = assign(socket, :game, game)
+	broadcast socket, "update", game	
+    {:reply, {:ok, %{ "game" => Game.client_view(game)}}, socket}
+  end
+
 def handle_in("resignation", %{"user"=>user}, socket) do 
 	name = socket.assigns[:name]
 	game = GameServer.resignation(name,user)
